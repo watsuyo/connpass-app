@@ -1,0 +1,43 @@
+
+steps:
+  - name: 'gcr.io/cloud-builders/yarn'
+    env: &env
+      - 'FIREBASE_API_KEY=$_FIREBASE_API_KEY'
+      - 'FIREBASE_AUTH_DOMAIN=$_FIREBASE_AUTH_DOMAIN'
+      - 'FIREBASE_DATABASE_URL=$_FIREBASE_DATABASE_URL'
+      - 'FIREBASE_PROJECT_ID=$_FIREBASE_PROJECT_ID'
+      - 'FIREBASE_STORAGE_BUCKET=$_FIREBASE_STORAGE_BUCKET'
+      - 'FIREBASE_MESSAGING_SENDER_ID=$_FIREBASE_MESSAGING_SENDER_ID'
+      - 'FIREBASE_APP_ID=$_FIREBASE_APP_ID'
+  - name: 'gcr.io/cloud-builders/yarn'
+    args: ['build']
+    env: *env
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['cp', './.nuxt/dist/client/**', 'gs://connpass-app-static/_nuxt/']
+    env: *env
+
+    # Pre
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        mv tsconfig.json ./.ci/tsconfig.original.json
+        mv ./.ci/tsconfig.cli.json tsconfig.json
+
+  - name: 'gcr.io/cloud-builders/yarn'
+    args: ['ts-node', './.ci/create-env.ts']
+    env: *env
+
+    # Post
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        mv tsconfig.json ./.ci/tsconfig.cli.json
+        mv ./.ci/tsconfig.original.json tsconfig.json
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['app', 'deploy', '--project', 'connpass-app']
+    env: *env

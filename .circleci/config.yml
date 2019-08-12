@@ -1,0 +1,54 @@
+version: 2
+jobs:
+  comment:
+    working_directory: ~/app
+    docker:
+      - image: circleci/node:10.16.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "yarn.lock" }}
+          - v1-dependencies-
+      - run: yarn
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
+      - run: yarn ts-node ./.ci/report-artifacts.ts
+  build:
+    working_directory: ~/app
+    docker:
+      - image: circleci/node:10.16.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "yarn.lock" }}
+          - v1-dependencies-
+      - run: yarn
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
+      - run: yarn lint
+      - run: bash ./.ci/check-diff.sh
+      - run: yarn test:coverage
+      - run: yarn build
+      - run: yarn build:storybook
+      - store_artifacts:
+          path: ~/app/storybook-dist
+          destination: storybook-dist
+      - store_artifacts:
+          path: ~/app/coverage
+          destination: coverage
+      - run: yarn codecov
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - build
+      - comment:
+          requires:
+            - build

@@ -43,6 +43,14 @@ jobs:
           path: ~/app/coverage
           destination: coverage
       - run: yarn codecov
+    dependencies:
+      override:
+        - yarn add firebase-tools
+    deployment:
+      deploy:
+        branch: master
+        commands:
+          - firebase deploy --project "connpass-app" --token "1/q-HOjS4q8aPliy1Hyh8mfs8YGjRXAk5FIrK34MEcB3Y"
 
 workflows:
   version: 2

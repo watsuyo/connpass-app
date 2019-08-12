@@ -19,7 +19,9 @@
   "dependencies": {
     "@nuxt/typescript": "^2.8.1",
     "@octokit/rest": "^16.28.4",
+    "cors": "^2.8.5",
     "cross-env": "^5.2.0",
+    "dateformat": "^3.0.3",
     "firebase": "^6.2.0",
     "lodash": "^4.17.11",
     "nuxt": "2.8.0",

@@ -1,32 +1,28 @@
 import { ExCommit, ExDispatch } from 'vuex'
 
 export interface State {
-  authData?: {
-    token: string
-  } | null
+  userEvents: ''
 }
 
 export interface Getters {
-  authData: {
-    token: string
-  } | null
+  getUserEvents: ''
 }
 
 export interface RootGetters {
-  'user/authData': Getters['authData']
+  'userEvents/userEvents': Getters['getUserEvents']
 }
 
 export interface Mutations {
-  setUserData: any
+  setUserEvents: any
 }
 
 export interface RootMutations {
-  'user/setUserData': Mutations['setUserData']
+  'userEvents/setUserEvents': Mutations['setUserEvents']
 }
 
 export interface Actions {
-  authUser: any
+  fetchUserEvents: any
 }
 export interface RootActions {
-  'user/authUser': Actions['authUser']
+  'userEvents/fetchUserEvents': Actions['fetchUserEvents']
 }

@@ -1,11 +1,11 @@
 import 'vuex'
-import * as User from '~/types/store/user'
+import * as UserEvents from '~/types/store/userEvents'
 
 declare module 'vuex' {
   type RootState = {
-    user: User.State
+    userEvents: UserEvents.State
   }
-  type RootGetters = User.RootGetters
-  type RootMutations = User.RootMutations
-  type RootActions = User.RootActions
+  type RootGetters = UserEvents.RootGetters
+  type RootMutations = UserEvents.RootMutations
+  type RootActions = UserEvents.RootActions
 }

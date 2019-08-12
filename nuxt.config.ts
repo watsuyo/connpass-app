@@ -53,6 +53,8 @@ const config: NuxtConfiguration = {
   plugins: [
     '~/plugins/firebase.ts',
     '~/plugins/environments.ts',
+    '~/plugins/filters.ts',
+    { src: 'plugins/axios.ts', ssr: false }
   ],
 
   env: {
@@ -70,7 +72,14 @@ const config: NuxtConfiguration = {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/axios'
   ],
+  axios: {
+    proxy: true
+  },
+  proxy: {
+    '/api/': { target: 'https://connpass.com', pathRewrite: { '^/api/': '/' } }
+  },
 
   /*
   ** Build configuration
